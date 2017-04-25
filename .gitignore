@@ -3,6 +3,7 @@ _*
 .eunit
 *.o
 *.beam
+*.geany
 *.plt
 *.swp
 *.swo
