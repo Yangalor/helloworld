@@ -28,7 +28,15 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    {ok, { {one_for_all, 0, 1}, []} }.
+	
+	SupFlags = #{strategy => one_for_one, intensity => 1, period => 5},
+    ChildSpecs = [#{id => gui,
+                    start => {helloworld_gui, start_link, []},
+                    restart => transient,
+                    shutdown => brutal_kill,
+                    type => worker,
+                    modules => [helloworld_gui]}],
+    {ok, {SupFlags, ChildSpecs}}.
 
 %%====================================================================
 %% Internal functions
