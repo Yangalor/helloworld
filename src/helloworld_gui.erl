@@ -15,6 +15,7 @@
 -export([start/0, start/1, start_link/0, start_link/1, 
 		 init/1, handle_call/3, handle_cast/2, handle_event/2,
 		 handle_info/2, code_change/3, terminate/2]).
+		 
            
 %% API
 
@@ -38,8 +39,13 @@ init(Args) ->
 	
 	process_flag(trap_exit, true),
 	
-	Frame = wxFrame:new(Wx, ?wxID_ANY, "Привет, Мир!", [{size, {400, 300}}]),	
+	Frame = wxFrame:new(Wx, ?wxID_ANY, "Привет, Мир!", [{size, {800, 600}}]),
 	
+	StatusBar = wxFrame:createStatusBar(Frame, []),	
+	wxStatusBar:setFieldsCount(StatusBar, 3, [{widths, [-1, -1, 100]}]),	
+	wxStatusBar:setStatusStyles(StatusBar, [?wxSB_FLAT, ?wxSB_FLAT, ?wxSB_NORMAL]),
+	timeupdate(StatusBar),
+		
 	wxFrame:show(Frame),
 	
 	{Frame, {}}.
@@ -69,4 +75,9 @@ handle_event(#wx{event=#wxClose{}}, State) ->
     {stop, normal, State};
 handle_event(_,State) ->    
     {noreply, State}.           
-           
+
+%% Internals
+
+timeupdate(StatusBar) ->
+	{H,M,S} = time(),
+	wxStatusBar:pushStatusText(StatusBar, io_lib:format("Время ~2.10.0b:~2.10.0b:~2.10.0b", [H, M, S]), [{number, 2}]).
