@@ -34,11 +34,12 @@ start_link(Debug) ->
 
 init(Args) ->
 	
-	wx:new(Args),
+	Wx = wx:new(Args),	
 	
 	process_flag(trap_exit, true),
 	
-	Frame = wxFrame:new(wx:null(), ?wxID_ANY, "Привет, Мир!", [{size,{800,600}}]),
+	Frame = wxFrame:new(Wx, ?wxID_ANY, "Привет, Мир!", [{size, {400, 300}}]),	
+	
 	wxFrame:show(Frame),
 	
 	{Frame, {}}.

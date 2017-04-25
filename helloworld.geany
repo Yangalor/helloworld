@@ -28,14 +28,15 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=1
-FILE_NAME_0=0;Conf;0;EUTF-8;1;1;0;%2Fhome%2Fchief%2Ferlang%2Fhelloworld%2Fsrc%2Fhelloworld.app.src;0;4
-FILE_NAME_1=764;Erlang;0;EUTF-8;1;1;0;%2Fhome%2Fchief%2Ferlang%2Fhelloworld%2Fsrc%2Fhelloworld_app.erl;0;4
-FILE_NAME_2=0;Erlang;0;EUTF-8;1;1;0;%2Fhome%2Fchief%2Ferlang%2Fhelloworld%2Fsrc%2Fhelloworld_sup.erl;0;4
-FILE_NAME_3=38;Markdown;0;EUTF-8;1;1;0;%2Fhome%2Fchief%2Ferlang%2Fhelloworld%2FREADME.md;0;4
+current_page=3
+FILE_NAME_0=231;Erlang;0;EUTF-8;1;1;0;%2Fhome%2Fchief%2Ferlang%2Fhelloworld%2Fsrc%2Fhelloworld_app.erl;0;4
+FILE_NAME_1=241;Erlang;0;EUTF-8;1;1;0;%2Fhome%2Fchief%2Ferlang%2Fhelloworld%2Fsrc%2Fhelloworld_sup.erl;0;4
+FILE_NAME_2=38;Markdown;0;EUTF-8;1;1;0;%2Fhome%2Fchief%2Ferlang%2Fhelloworld%2FREADME.md;0;4
+FILE_NAME_3=268;Erlang;0;EUTF-8;1;1;0;%2Fhome%2Fchief%2Ferlang%2Fhelloworld%2Fsrc%2Fhelloworld_gui.erl;0;4
+FILE_NAME_4=1663;Erlang;0;EUTF-8;1;1;0;%2Fusr%2Flib%2Ferlang%2Flib%2Fwx-1.8%2Fexamples%2Fdemo%2Fdemo.erl;0;4
 
 [VTE]
-last_dir=/home/chief/erlang
+last_dir=/home/chief/erlang/helloworld
 
 [build-menu]
 NF_00_LB=_Собрать
