@@ -44,7 +44,8 @@ init(Args) ->
 	StatusBar = wxFrame:createStatusBar(Frame, []),	
 	wxStatusBar:setFieldsCount(StatusBar, 3, [{widths, [-1, -1, 100]}]),	
 	wxStatusBar:setStatusStyles(StatusBar, [?wxSB_FLAT, ?wxSB_FLAT, ?wxSB_NORMAL]),
-	timeupdate(StatusBar),
+	
+	wxStatusBar:pushStatusText(StatusBar, io_lib:format("Время ~2.10.0b:~2.10.0b:~2.10.0b", tuple_to_list(time())), [{number, 2}]),
 		
 	wxFrame:show(Frame),
 	
@@ -77,7 +78,3 @@ handle_event(_,State) ->
     {noreply, State}.           
 
 %% Internals
-
-timeupdate(StatusBar) ->
-	{H,M,S} = time(),
-	wxStatusBar:pushStatusText(StatusBar, io_lib:format("Время ~2.10.0b:~2.10.0b:~2.10.0b", [H, M, S]), [{number, 2}]).
