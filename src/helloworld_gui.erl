@@ -16,6 +16,8 @@
 		 init/1, handle_call/3, handle_cast/2, handle_event/2,
 		 handle_info/2, code_change/3, terminate/2]).
 		 
+-export([timeupdate/0]).
+		 
            
 %% API
 
@@ -23,13 +25,13 @@ start() ->
     start([]).
 
 start(Debug) ->
-    wx_object:start(?MODULE, Debug, []).
+    wx_object:start({local, ?MODULE}, ?MODULE, Debug, []).
 
 start_link() ->
     start_link([]).
 
 start_link(Debug) ->
-    wx_object:start_link(?MODULE, Debug, []).
+    wx_object:start_link({local, ?MODULE}, ?MODULE, Debug, []).
 
 %% Callbacks
 
@@ -45,11 +47,11 @@ init(Args) ->
 	wxStatusBar:setFieldsCount(StatusBar, 3, [{widths, [-1, -1, 100]}]),	
 	wxStatusBar:setStatusStyles(StatusBar, [?wxSB_FLAT, ?wxSB_FLAT, ?wxSB_NORMAL]),
 	
-	wxStatusBar:pushStatusText(StatusBar, io_lib:format("Время ~2.10.0b:~2.10.0b:~2.10.0b", tuple_to_list(time())), [{number, 2}]),
+	timer:apply_interval(1000, ?MODULE, timeupdate, []),
 		
 	wxFrame:show(Frame),
 	
-	{Frame, {}}.
+	{Frame, {Frame}}.
 
 code_change(_, _, State) ->
     {stop, not_yet_implemented, State}.
@@ -69,6 +71,10 @@ handle_info(_Msg, State) ->
 handle_call(_Msg, _From, State) ->    
     {reply,ok,State}.	
 
+handle_cast(timeupdate, State = {Frame}) ->
+	StatusBar = wxFrame:getStatusBar(Frame),
+	wxStatusBar:pushStatusText(StatusBar, io_lib:format("Время ~2.10.0b:~2.10.0b:~2.10.0b", tuple_to_list(time())), [{number, 2}]),
+	{noreply,State};
 handle_cast(_Msg, State) ->    
     {noreply,State}.
 
@@ -78,3 +84,6 @@ handle_event(_,State) ->
     {noreply, State}.           
 
 %% Internals
+
+timeupdate() -> 
+	wx_object:cast(?MODULE, timeupdate).
