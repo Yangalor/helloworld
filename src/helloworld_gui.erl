@@ -45,6 +45,23 @@ init(Args) ->
 	% Создание главного окна приложения
 	Frame = wxFrame:new(Wx, ?wxID_ANY, "Привет, Мир!", [{size, {800, 600}}]),
 	
+	% Создание строки меню GUI
+	MenuBar = wxMenuBar:new(),
+	File    = wxMenu:new([]),
+    wxMenu:append(File, ?wxID_PRINT, "&Печать", "Не реализовано", false),
+    wxMenu:appendSeparator(File),
+    wxMenu:append(File, ?wxID_EXIT, "&Выход", "Завершение работы", false),
+    Help    = wxMenu:new([]),
+    wxMenu:append(Help, ?wxID_HELP, "Помощь", "Помощь на сайте приложения", false), 
+    wxMenu:append(Help, ?wxID_ABOUT, "О приложении", "Краткая информация о приложении", false), 
+    wxMenuBar:append(MenuBar, File, "&Файл"),    
+    wxMenuBar:append(MenuBar, Help, "&Помощь"),
+    wxFrame:setMenuBar(Frame,MenuBar),
+	
+	% Подписка на события строки меню GUI
+	wxFrame:connect(Frame, command_menu_selected),
+    wxFrame:connect(Frame, close_window),
+	
 	% Создание и настройка статусной строки из трех секций
 	StatusBar = wxFrame:createStatusBar(Frame, []),	
 	wxStatusBar:setFieldsCount(StatusBar, 3, [{widths, [-1, -1, 100]}]),	
@@ -94,7 +111,42 @@ handle_cast(timeupdate, State = {Frame}) ->		% Обновление времен
 handle_cast(_Msg, State) ->    					% Обработка прочих асинхронных вызовов
     {noreply,State}.
 
-handle_event(#wx{event=#wxClose{}}, State) ->	% Обработка события закрытия главного окна GUI
+%% Блок обработки событий GUI
+
+handle_event(#wx{id = Id,						% Обработка событий строки меню GUI
+		 event = #wxCommand{type = command_menu_selected}},
+	     State = {Frame}) ->
+    case Id of
+		?wxID_PRINT ->		    
+		    {noreply, State};
+		?wxID_HELP ->
+		    wx_misc:launchDefaultBrowser("https://github.com/Yangalor/helloworld"),
+		    {noreply, State};
+		?wxID_ABOUT ->
+		    WxWVer = io_lib:format("~p.~p.~p.~p",
+					   [?wxMAJOR_VERSION, ?wxMINOR_VERSION,
+					    ?wxRELEASE_NUMBER, ?wxSUBRELEASE_NUMBER]),
+		    application:load(wx),
+		    {ok, WxVsn} = application:get_key(wx,  vsn),
+		    AboutString =
+			"Информация о приложении\n"
+			"Автор: Yangalor\n\n" ++
+			"Версия модуля erlang: wx-" ++ WxVsn ++
+			"\nВерсия библиотеки wxWidgets: " ++ lists:flatten(WxWVer),
+	
+		    wxMessageDialog:showModal(wxMessageDialog:new(Frame, AboutString,
+								  [{style,
+								    ?wxOK bor
+								    ?wxICON_INFORMATION bor
+								    ?wxSTAY_ON_TOP},
+								   {caption, "О приложении"}])),
+		    {noreply, State};
+		?wxID_EXIT ->		    
+		    {stop, normal, State};
+		_ ->
+		    {noreply, State}
+    end;
+handle_event(#wx{event=#wxClose{}}, State) ->	% Обработка события закрытия главного окна GUI	
     {stop, normal, State};
 handle_event(_,State) ->    					% Обработка прочих событий
     {noreply, State}.           
